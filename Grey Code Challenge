@@ -1,0 +1,18 @@
+Gray Code
+Algorithms: reflected binary code method.
+n = 2 in this problem, meaning we start with the sequence n=1 i.e. [0,1], then n=2 [00,01,11,10], n=3, the recursion continues depending on the input n.
+class Solution(object):
+    def grayCode(self, n):
+        """
+        :type n: int
+        :rtype: List[int]
+        """
+        # Initialize the sequence for 0 bits as [0]
+        result = [0]
+        #Building the GreyCode Iteratively for each bit position.
+        for i in range(n):
+            #reflection: prefixing current numbers with 1 by adding 2^i to each number in reverse.
+            result += [x +  (1 << i) for x in reversed(result)]
+        return result
+
+        
