@@ -1,0 +1,38 @@
+Problem: Given an array of integers nums, there is a sliding window of size k that moves from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+
+Return the max sliding window.
+
+
+from collections import deque
+
+class Solution(object):
+    def maxSlidingWindow(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        if not nums:
+            return []
+        
+        # Initialize the deque and result list
+        dq = deque()  # Stores indices of the elements in the sliding window
+        result = []
+        
+        for i in range(len(nums)):
+            # Remove indices that are out of the bounds of the current window
+            if dq and dq[0] < i - k + 1:
+                dq.popleft()
+            
+            # Remove indices whose corresponding values are smaller than nums[i]
+            while dq and nums[dq[-1]] < nums[i]:
+                dq.pop()
+            
+            # Add current index to the deque
+            dq.append(i)
+            
+            # Append the max in the current window to the result
+            if i >= k - 1:
+                result.append(nums[dq[0]])  # The max element in the current window is at dq[0]
+        
+        return result
