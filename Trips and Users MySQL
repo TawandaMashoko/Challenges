@@ -1,0 +1,27 @@
+MySQL
+Problem: The Truth Table holds all taxi trips. Each trip has a unique id, while client_id and driver_id are both foreign keys, to the User_id at the users table. Status is an Enum type of(completed_by_driver; clancelled_by_client)
+1. The Users Table holds all users, each User has a unique Users_Id, and Role is an ENUM type of ('client', 'driver', 'partner') 
+Task: Write an SQL query to find the cancellation rate of requests made by unbanned users (both client and driver must be unbanned) between "October 1 2013" and "October 3 2013". The cancellation rate is computed by dividing, the number of cancelled (by client or driver)
+requests made by unbanned users by the total number of requests made by unbanned users.
+
+Approach: we want to calculate a cancellation rate which is a ratio of the request that we have cancelled, against our request and then we have the condition of only having unbanned users, calculating for those 2 dates listed above
+N.B every function in SQL is written in uppercase and everything that you see in quotation marks is because the word will be containing a space.
+Since we are calculating the cancleation rate for each day we are going use group by function, to sum up the requests that were cancelled we are going to use Sum(), using the if and our condition is before the first comma, after that is what happens if that condition
+is True, and the second comma is what happens when condition is false   IF(Condition,True,False) and our condition should be based on status, so if status is either cancelled by driver or cancelled by client we should and if it is not we should not count it
+we see this in our enum type, we will use the COUNT function to round it up to 2 decimal places so we place the 2 after the comma, WHERE is a filter that we will use for all the input Data, we will set WHERE request at to be greater or equal to  the first date and the
+last date, Client_id NOT IN (SELECT User_Id FROM Users WHERE Banned = "Yes") what happens in this subquery is that we are going to select all users that are banned and then we are going to check whether the client is in that banned list and inorder to do the same 
+for the driver ID as well i will copy and Paste and change Client_Id to Driver_Id
+
+MySQL Code: 
+# Write your MySQL query statement below
+SELECT 
+    Request_at AS Day,  -- Corrected: Specify 'AS Day' directly for renaming 'Request_at' column
+    ROUND(SUM(IF(Status != 'completed', 1, 0)) / COUNT(*), 2) AS `Cancellation Rate`  -- Use COUNT(*) to count all rows for accuracy
+FROM 
+    Trips
+WHERE 
+    Request_at BETWEEN '2013-10-01' AND '2013-10-03'  -- Simplified date filtering
+    AND Client_Id NOT IN (SELECT Users_Id FROM Users WHERE Banned = 'Yes')
+    AND Driver_Id NOT IN (SELECT Users_Id FROM Users WHERE Banned = 'Yes')
+GROUP BY 
+    Request_at;
