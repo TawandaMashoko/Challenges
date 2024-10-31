@@ -1,0 +1,103 @@
+Problem: Convert a non negative integer num into its English Word Representation
+Approach: The integer is non negative but it could still be 0, and it could be upto 32 bits so, 0 - 2^31 - 1, the reason it is 32 is because we are not dealing with negative numbers, so we ar only using 31 of the bits, it is going to be a big number it can contain 
+2,100,000,000, so this is going to be the maximum meaning we are not going to have 3 billion or anything larger than that. We have to break this problem down into repeated work, we create a dictionary for numbers starting from 0 to 19, then when we get to 20, we start to 
+see some repeated work, for example we have twenty then "one", the one is repeated. So the hard coded strings will be from 1-19, then from 20-90. 
+If we have 2 digit numbers we will be able to convert that into a string, if it is < 20, we can look it up in this range(1-19), if it is 20, we will return "twenty" but if it is 21, we look it in in (20-90) and then in (1-19) also, because if something is zero, 
+we do not have to look it up, the intuition is that we do not have to say it is twenty "zero" when you say it in words it does not apply to the law of how we pronounce the number itself, this process is repeated from (20-99).
+3 digits _ _ _, if we have 1 in the first index, the good thing is the number is written as One "HUNDRED", and the last 2 digits you will look them up in the other hard coded dictionary and this will just be a subproblem, so what ever number is in the first index it will
+tell us which number to put before the word 100.
+4 digits _ _ _ _, the first index will tell us how many thousands we have, and then we do what we are supposed to do in the subproblem like we stated above,
+for _ _ _, _ _ _, _ _ _, _ _ _ this is a billion, we will only have to look at the last 3 digits, 789 for example we will have to look it up in the 7 in the one's place see how many numbers we have, break 89 down and we get the 10's in (20-90) and the ones are in (1-19)
+for the other 3 digits before 789, we can say 456,789, the only difference from 4 to 6 is that we are going to have the word thousand right after it
+for the other 3 digits, it tells us how many millions we have, but we break it up again into 3 digits, also if we have 3 zero's we can consider it to be an empty string
+for the remaining 2, we can do the same thing, we can assume there is a couple of leading 0's but it is 2 Billion we will look up where the ones are and then concatenate the word Billion at the end. 
+
+Inside my code i have a helper function that is going to take an integer(n) and n is going to be upto 3 Digits because i am going to be processing the input 3 digits at a time, so my structure is i am going to go through nums, while num is not 0, i will get 3 digits 
+by taking num and mode it by 1000 and get the remainder so anything smaller than 1000 will be left over and thats what digits will be, digits = num % 1000, and then  i will call get string on the digits, s = get_string(digits), and now i have the string in variable s,
+on the next iteration of the loop i want the next 3 digits, so i removed digits from the number contained in variable digits, by dividing it by a 1000 then i stored it into variable called num, num = num // 1000, but i need a string that will be a pointer i called 
+post_fix in the code, and i have a variable counter i that tells me where i am in, so to the string after i call the helper functioni added the postfix of [i], notice in my list i added spaces before the word because i am concatenating them together. 
+i have to create an result array, array not string because each of these results need to be seperated by a space, so at the end i want to join all the parts seperating them by a space, so i said return " ", adding a space between the qoutes, then .join() everything in the
+result. 
+So i made sure that when i take the string s, before i add it to the result, i have to do so in the correct order, the function in variable s could return an empty string if we have 1 million beause there will be zeros and i did not want to add the empty strings to the 
+result because if i join them i will mess up the wide spacing, so i added a condition or If statement that if it is not an empty string then i add it to the result, at the beginning of the result and in python you just append s to the result and reverse the result 
+because it should never grow out of the length of 4 but if it did we reverse it at the end of the loop, at the top i did a list and joined them at the end, incase we have 123, and we can also have a 120  but the last part is 0 so i do not have to represent it, 102, 
+i do not have any 10's, we can also have no 100's by this digit 012, and to see how many hundreds i have i just took n and divided it by 100, and i checked if it is non 0 by adding a condition i.e. if 100 is non zero, i append the ones_map from[hundreds] but it has to be
+a single String so before i append it i added to it, how many Hundreds there might be, so this is going to be one string before i append it, now i want the last 2 digits, so i created a variable last_2, and mode it by 100, and if last 2 >= 20 we might need the 10's
+and the 1's since the value is > 20 so there will be something in the 10's place,so i will get the 10's and the ones, for the 10's its last_two / 10 will give us how many tens i have and last_two moded by 10 will give me how many 1's i have, then i want to append to the result how
+many 10's i have to take tens varaible * 10 and then use this in the 10's map to look up the strings, ones can be 0 or none 0, i added an conditional statement for that as well incase if one is not zero, i will append looking up to the ones map what one happens to be 
+but if not it is simple, for example if it is 100, if all are zeor's there is no need to append anything anymore, i will append it to whatever value it maps to and since it is < 20 i will use the ones map and map the last 2 digits using last_two variable to the word and i will append 
+it to the result.
+
+Bug: i had to add the post fix to the if statement
+
+class Solution(object):
+    def numberToWords(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        if num == 0: 
+            return ""
+
+        ones_map = {
+            1: "One",
+            2: "Two",
+            3: "Three",
+            4: "Four",
+            5: "Five",
+            6: "Six",
+            7: "Seven",
+            8: "Eight",
+            9: "Nine",
+            10: "Ten",
+            11: "Eleven",
+            12: "Twelve",
+            13: "Thirteen",
+            14: "Fourteen",
+            15: "Fifteen",
+            16: "Sixteen",
+            17: "Seventeen",
+            18: "Eighteen",
+            19: "Nineteen",   
+        }        
+
+        tens_map = {
+            20: "Twenty",
+            30: "Thirty",
+            40: "Forty",
+            50: "Fifty",
+            60: "Sixty",
+            70: "Seventy",
+            80: "Eighty",
+            90: "Ninety",
+        } 
+
+        def get_string(n):
+            #123
+            res = []
+            hundreds = num // 100
+            if hundreds:
+                res.append(ones_map[hundreds] + " Hundred")
+            last_two = n % 100
+            if last_two >= 20:
+                tens, ones = last_two / 10, last_two % 10 
+                res.append(tens_map[tens * 10])
+                if ones:
+                    res.append(ones_map[ones])
+
+            elif last_two:
+                res.append(ones_map[last_two])
+            return " ".join(res)
+
+        post_fix = ["", "Thousand", "Million", "Billion"]
+        result = []
+        i = 0
+        while num:
+            digits = num % 1000
+            s = get_string(digits)
+            if s:
+                result.append(s + post_fix[i])
+            num = num // 1000
+            i += 1
+        result.reverse()
+        return " ". join(result)
