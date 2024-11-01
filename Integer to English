@@ -1,5 +1,5 @@
 Problem: Convert a non negative integer num into its English Word Representation
-Approach: The integer is non negative but it could still be 0, and it could be upto 32 bits so, 0 - 2^31 - 1, the reason it is 32 is because we are not dealing with negative numbers, so we ar only using 31 of the bits, it is going to be a big number it can contain 
+Approach: The integer is non negative but it could still be 0, and it could be upto 32 bits so, 0 - 2^31 - 1, the reason it is 32 is because we are not dealing with negative numbers, so we are only using 31 of the bits, it is going to be a big number it can contain 
 2,100,000,000, so this is going to be the maximum meaning we are not going to have 3 billion or anything larger than that. We have to break this problem down into repeated work, we create a dictionary for numbers starting from 0 to 19, then when we get to 20, we start to 
 see some repeated work, for example we have twenty then "one", the one is repeated. So the hard coded strings will be from 1-19, then from 20-90. 
 If we have 2 digit numbers we will be able to convert that into a string, if it is < 20, we can look it up in this range(1-19), if it is 20, we will return "twenty" but if it is 21, we look it in in (20-90) and then in (1-19) also, because if something is zero, 
