@@ -1,1 +1,28 @@
-Problem: Given a positive integer "n", write a function that returns the number of set bits(a bit in the binary representation of a number that has the value one) 
+Problem: Given a positive integer "n", write a function that returns the number of set bits(a bit in the binary representation of a number that has the value one) in its binary representation(aka Hamming Weight(is a code weight that specifies the number 1's in it))
+
+we are given a num = 11, which is a base 10 number not in binary form, which in binary will be 1011, it will be 2^3 + 0 + 2^1 + 2^0 = 8 + 2 + 1 = 11.
+How can we use the end operator to count the number of 1's?
+if n = 11, we take n - 1 which will give us 10, if we convert that to binary will be 1010  
+1011
+1010
+____
+8 2 , and we get 10 if we add them together, but if we AND these 2 things together, we get 1010, 1011 turned into 1010.
+____
+so i will have my answer to be initialized to be 0, and everytime we do the ampersand(&), i am going to increase it by 1, if we have this new number now which will be 10 in binary, we will take n - 1 again, which will be 9 now 
+i will do a logical bitwise again with 10 like i did above and 9 is represented as 1001 
+1010 & 1001 = 1000, and we chopped of the least significant one again, meaning we have another one again and we will incrememnt the counter variable to be 2, 
+if we ampersand 1000(8) with 0111(7) we chop off that 1 again and we will get 0000, and then increment and then see that the final answer is 3. 
+
+In a nutshel what we keep doing is that, n = n &(bitwise AND) with n - 1, n = n & (n-1), and we do this until we hit 0, this is a good solution because imagine if you had a very long number 10000000000000001, if it was then the bruteforce will be to iterate all positions,
+and everytime we encounter our one we increment our count, this and method of doing this ignores this 10000001 as kind of a string, it just does a bitwise operation and it does that only for the number of 1's that we have, so we would only do this twice, 
+Only does a bitwise operation only for the number of 1's that we have and we do this twice, that is the difference of looking at the whole string by just looking at the number of ones init
+Time Complexity will be 0(number of Ones) and Space complexity is 0(1).
+
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        ans = 0
+        while n!= 0:
+            ans +=1
+            n = n & (n - 1)
+        return ans
+
