@@ -1,0 +1,15 @@
+Problem: iven a 0 indexed binary string s having an even length, a string is beautiful if i am able to partition it into one or more substring such that:
+1. Each string has an even length.
+2. Each substring contains only '1's or '0's, meaning i can change any character in s to 1 or 0.
+Then lastly return the minimum number of changes required to make string s beautiful.
+
+Example 1
+Input s = "1001"
+Output: 2
+Explanation: we only change s[1] to 1 and s[3] to 0, "1100" is beautiful, because we can partition it into "11|00", proving that 2 is the minimum number of changes required to make the string beautiful.
+
+Approach
+one way we can keep track of this is to do a 2 pointer sliding window approach, 1 left pointer and one right pointer.
+Divide the string into substrings depending on its size becase the length of the input string is going to be even
+s = 00101100, i can break it into [00][1011][00] 
+
