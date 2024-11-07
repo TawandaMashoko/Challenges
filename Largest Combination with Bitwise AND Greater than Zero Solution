@@ -1,0 +1,29 @@
+The bitwise AND of an array nums is the bitwise AND of all integers in nums.
+for example, for nums [1,5,3], the bitwise AND = 1 & 5 & 3 = 1, also for nums = [7], the bitwise AND is 7. 
+Given an array of positive integers "candidates". Evaluate the bitwise AND of every combination of numbers of "candidates".
+Each number in candidates may only be used once in each combination.
+
+return the size of the "largest" combination of candidates with a bitwise AND "greater" than 0. 
+
+Explanation of Code:
+i is going to start at [0]
+the count of the position initially is going to be 0, 
+we are going to store all the numbers, for each number in candidates stored in variable n, if that number ANDED with 1 or 1 & n is 1 or True, we will increment the counter, but now we have to know the position, the ith position, how do we get the number in the if statement,
+how do we know if the bit is set?, we can take 1 and shift it to the left by i wrapped in parenthesis and we have the AND after it condensed with incrementing the counter else 0.
+Now knowing how many bits are in the ith position, we maximize this by declaring a variable result to 0, and this variable will be a max of itself as well as the count on the iteration. 
+
+Implementation:
+
+class Solution:
+    def largestCombination(self, candidates: List[int]) -> int:
+
+        res = 0    
+        for i in range(32):
+            cnt = 0
+            for n in candidates:
+                cnt += 1 if (1 << i) & n else 0
+            res = max(res, cnt)
+        return res
+
+        
+  
