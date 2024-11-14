@@ -9,7 +9,7 @@ class Solution:
         def bin_search(l,r,target):
             #return largest i, where nums[i] < target
             while l <= r:
-                m = (l + r) // 2 # l (r - 1) // 2
+                m = (l + r) // 2 # l (r - l) // 2
                 if nums[m] >= target:
                     r = m - 1
                 else:
