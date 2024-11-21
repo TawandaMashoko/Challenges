@@ -1,0 +1,8 @@
+Problem: Given 2 Integers m and n representing a 0 indexed (m x n) grid. You are also given 2D integer Arrays guards and walls where guards[i] = [rowsi, coli] and walls[j] = 
+[row(j), col(j)] and walls[j] = (row[j], col[j]), to solve this problem, we need to represent the position of the ith guard and the jth wall respectively, the guard can see all
+four cardinal directions(north, east, south or west) starting from their position unless obstructed by a wall or another guard. 
+A cell is guarded if there is atleast one guard that can see it.
+
+Approach:
+
+Code:
