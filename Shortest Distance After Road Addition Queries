@@ -1,5 +1,47 @@
 Problem:
 Approach:
+1. The Idea is to see it as a directed graph which is what unidirectional means in this context, 
+Given "n" nodes as our parameter, meaning I am given nodes from 0 up until 4, 0 -> 1, 0 has a directed edge to 1, 1 -> 2,
+this pattern repeats up to 4 in the first example, where 4 does not have an outgoing edge.
+2. Given a list of queries where each represents a directed edge, [2,4], this query means a new node is introduced from 2 to 4.
+3. We want to return an array, the same size as the queries array, and in the queries array we have 3 edges,
+meaning I have to return an array with 3 values. 
+What are those values going to represent after this edge [2,4], by asking myself what the length from the 0th node to n - 1 node which is 4,
+n = 5, meaning we have 4 edges, meaning it takes 4 jumps to get to the last node, but with the introduction of the new One what is the new shortest path
+in this case, it happens to be [0->1][1->2][2->4], thus we have 3 in the first position as the output.
+(ii) Now this edge [0, 2], looking like the graph below, with this node introduced what will be the shortest path from this query to the n - 1 node, 4, 
+we already have [2,4], the path that takes 2 [0, 2] {0->1, 1 -> 2} it will be covered with one jump, then it will just be 2 jumps and we put 2 in the
+next spot.
+(iii) Lastly I will introduce this node from [0,4] where we will have one jump and one Edge so that we will have 1 in the last position and it will be the 
+entire output.
+
+This is a Graph problem since I am finding the shortest distance is the biggest hint, 2 common graph algorithms are BFS and DFS, BFS is more 
+optimal for finding the "Shortest Path".
+
+BRUTEFORCE SOLUTION IN THE CONTEXT OF THIS PROBLEM: 
+n is the size of the graph, that is how many nodes are in the graph, it is similar to how many edges are in the graph as well,
+in the worst case e.g. [0,4] the last graph, is going to be of size n + q, in terms of the total number of nodes and edges, that is the size of the 7
+graph, so the graph traversal is not going to be any worse than this.7
+
+A Brute force will be running the BFS algorithm every time we update the graph, and add a new node or query to the graph, how many times will the algorithm run? the bfs will run q times, q( n + q), 
+the idea of bfs is level order traversal going through every level,
+1. With the first graph the first level is 0, which is going to be in our queue(the data structure used for bfs,
+going through everything in the Queue Now, going through the neighbors of each node we popped, 0 only has one neighbor,
+we know this through updating the original graph into an adjacency list, where we will map every node to a list of its neighbor 
+0 -> [1]
+1 -> [2]
+2 - [3, 4] because of the query  
+
+Popping Queue from [0] will make us have the second level 1, and popping that will make us have the second level 2, and after popping 2, 
+2 has 2 neighbors [3, 4] and we will be here once I pop the 4 i will realize i have reached the target because i am looking for (n - 1)th node  
+and to KNOW how many steps it took to reach this position there were 3 steps like shown above from 0, 1, AND 2 where I found 4 in its neighbors
+
+HOW to count this, instead of adding just one value to the queue, add a pair of values, 1st will indicate the node, 2nd will indicate the length it took to 
+reach that node (node, length) (0,0) it took 0 steps to reach to zero nodes, next we add 1, and it took one step to reach that from 0 -> 1. so we take the previous length and add 1 to it every time. (1,1) is the next level,
+the next will be (2,2), the next level will be (3,3), as well as (4,3)
+and after we pop this one (4,3) WE WILL GET THE NODE and it is equal to the target the length it took was 3, it took 3 steps to get to the solution
+
+
 Solution:
 class Solution:
     def shortestDistanceAfterQueries(self, n: int, queries: List[List[int]]) -> List[int]:
