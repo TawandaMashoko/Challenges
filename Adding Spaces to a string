@@ -1,5 +1,20 @@
-Problem:
+Problem: On Leetcode s = "LeetcodeHelpsMeLearn", spaces= [8, 13, 15] I have to have the output: "Leetcode Helps Me Learn".
+
 Approach:
+
+(i)The Algorithm I am going to use here is a "2 Pointer", this algorithm in terms of time complexity is 0(n + m) for this problem since one pointer is going to be
+focused on the first index of the character in string (s) and the second pointer will be at a position at index[0] of the spaces array which will be 8.
+
+(ii)I have to add a space before the index character in the spaces array for example [8], is H in the string s so I add the character before H, and the rest applies to 13 and 15,
+13 = M and 15 = L.
+
+(iii) The idea is first pointer will be the left pointer for string s represented as i in the code and spaces which will be represented as j in our code, initially they
+both start at the same position until I move the right pointer at the first index in the spaces array which is 8 and then take the whole string in between those 2 pointers
+"Leetcode" and Add a space before H as indicated in the problem, recursively do the same until 1 point the right one in this case goes out of bounds.
+
+(iv) Store all of those strings in an array result which we are going to return after i join all the strings contained in them after adding a space, by the join method.
+
+
 Solution:
 
 class Solution:
