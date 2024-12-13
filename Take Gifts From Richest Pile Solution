@@ -1,0 +1,15 @@
+Problem:
+Approach: Heap Data Structure, we need to do 4 runs of the simulation of the gifts array, taking the remaining values and sum them up,
+Solution:
+class Solution:
+    def pickGifts(self, gifts: List[int], k: int) -> int:
+
+        gifts = [-g for g in gifts]
+        heapq.heapify(gifts)
+
+        for _ in range(k):
+            n = -heapq.heappop(gifts)
+            heapq.heappush(gifts, -floor(sqrt(n)))
+
+        return -sum(gifts)
+        
