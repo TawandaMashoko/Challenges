@@ -1,0 +1,19 @@
+Problem:
+Approach: I have to Use a Priority Heap explicitly tracking the operations applied to each element, for the problem requires me to prioritize the updated element before moving
+it to other unprocessed elements, a standard heap loses this orders as values overlap or there are values with the same elements just like the heap used to Take Gifts challenge.
+
+Code:
+class Solution:
+    def getFinalState(self, nums: List[int], k: int, multiplier: int) -> List[int]:
+        
+        res = nums[::] # another way of copying an array in python
+        min_heap = [(n, i) for i, n in enumerate(nums)]
+        heapq.heapify(min_heap)
+
+        for _ in range(k):
+            n, i = heapq.heappop(min_heap)
+
+            res[i] *= multiplier
+            heapq.heappush(min_heap, (res[i], i))
+
+        return res
