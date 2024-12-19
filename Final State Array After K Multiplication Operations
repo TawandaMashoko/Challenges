@@ -1,6 +1,8 @@
 Problem:
-Approach: I have to Use a Priority Heap explicitly tracking the operations applied to each element, for the problem requires me to prioritize the updated element before moving
-it to other unprocessed elements, a standard heap loses this orders as values overlap or there are values with the same elements just like the heap used to Take Gifts challenge.
+Approach: I have to Use a Priority Heap explicitly tracking the operations applied to each element,
+for the problem requires me to prioritize the updated element before moving
+it to other unprocessed elements, a standard heap loses this order as values overlap or there are values with the same elements
+just like the heap used to take gifts challenge.
 
 Code:
 class Solution:
