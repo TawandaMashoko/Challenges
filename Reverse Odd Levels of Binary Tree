@@ -1,0 +1,40 @@
+Problem:
+Approach: This is a tree problem and we want to do a tree traversal, so we will make a order level traversal using the standard level algorithm, Breadth First Search (BFS)
+BFS uses a queue, we see the nodes in order, in LEVEL, so you initialize the queue with the root, because we want to start at the root, 
+1. There is something in the queue in this case [0] so we pop off that node, it is connected to 1 and 2, so we want to see them in that order, and then we place them in 
+the seen set making sure we do not add them in the queue again, 0(n) linear time complexity. 
+Solution:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def reverseOddLevels(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        q = deque([root])
+
+        i = 0
+
+        while q:
+            # if the level at i ANDED with 1 means they are odd.
+            if i & 1:
+                #reversing the values with 2 pointer approach
+                l, r = 0, len(q) - 1
+                #while left pointer has not crossed right pointer, swap values and shift the pointer
+                while l < r:
+                    # q at index left is swapped with q at index right
+                    q[l].val, q[r].val = q[r].val, q[l].val
+                    l += 1
+                    r -= 1
+                    
+
+            for _ in range(len(q)):
+                node = q.popleft()
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            i += 1
+        return root
+        
