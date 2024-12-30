@@ -1,0 +1,16 @@
+1. Problem: Leetcode 2466
+
+2. Approach:
+The goal is to build a string and the values should be of Low and High Inclusive, in the example the low value is 3 and the high value is also 3, all the strings that we will
+generate have to be of exactly length 3, the other constraint is that the string we build can only be of 0 or 1 as characters, whenever i append a 0 to the string, i have to
+append it as many times as the variable zero contains like in the example it is only mentioned one time, or whatever the variable might be equal to in other cases, if our 
+variable zero was equal to 2, then we would add it 2 times like "00" everytime we add it to the string and the same applies for the 1 character and we have the same variable
+informing how many ones we need to add consecutively each time a one is added to the string and in the case of the example again it is 1.
+
+this problem is not asking us to build strings but count them.
+Algorithm: Backtracking
+Explanation: Backtracking means you 1. Make a "Decision", 2. After making that decision you make some "Recursion" so you make a decision and move on, 3. Hit a "BaseCase"
+4. and at that point you Undo that Decision you made, so basically we make decisions and we know that we are able to Undo those decisions and so together that is called
+Recursive Backtracking. This is a Bruteforce technique, so if You ever Get a Problem like All, to find all solution we would use Backtracking to achieve this,
+
+3. Solution:
