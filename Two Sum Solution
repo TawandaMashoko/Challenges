@@ -1,0 +1,25 @@
+Problem:
+Approach:
+1. Create an empty dictionary to store elements and their indices
+2. Traverse through the array from left to right.
+3. For each element (i), calculate the complement by subtracting (i) from the target, complement = target - nums[i]
+4. Check if the complement exists in the Dictionary, if it does we have a solution.
+5. If the complement does not exist in the dictionary, add the current element nums[i] with it's index as the current value
+6. Repeat until we reach the end of the array range(len(nums))
+7. If there is no solution return empty array or None.
+
+Solution:
+The Bruteforce solution is to have 2 loops but that is not efficient it is 0(n^2)
+
+But the approach we used above is 0(n), linear time
+
+Code:
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        numMap={}
+        for i in range(len(nums)):
+            complement = target - nums[i]
+            if complement in numMap:
+                return [numMap[complement], i]
+            numMap[nums[i]] = i
+        return []
