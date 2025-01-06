@@ -1,0 +1,22 @@
+Problem: Palindrome is a number that reads the same way backward same way it reads from the start.
+Approach: 
+1. I turned x into a list 
+2. Turned that List into a String
+3. Make a Copy of it and reverse x for the case where it has a negative sign it has to read the same way backward, and all of it is linear time for I go through a loop Once
+4. Make Conditions, if it reads the same like a characteristic of a Palindrome, then return a Boolean True or False if the conditions are met
+Solution:
+class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        Pal_num = [x for x in str(x)]
+        copy = ''.join(Pal_num.copy())
+        int_1= int(copy)
+        if x < 0:
+            reversed_num = -int(str(abs(x))[::-1])
+        else:
+            reversed_num=int(str(abs(x))[::-1])
+        if int_1 == abs(x) and  int_1 == reversed_num:
+            return True
+        else:
+            return False
+
+        
