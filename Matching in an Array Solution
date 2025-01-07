@@ -1,0 +1,18 @@
+Problem: 1408 Leetcode(easy)
+Approach:
+Using of nested loops to compare the other for substring, and if they are the same then we continue and if they are not we break, you need to break in the inner loop
+because i made a mistake and the code went through the loop 2 times, meaning it had a potential of turning into an infinite loop if the condition was not made.
+Time Complexity of the algorithm is 0(n^2) because of the nested loops and the Space Complexity is 0(n) because we only append once not 2 times or there are not things added
+or removed from the res array created.
+Solution:
+class Solution:
+    def stringMatching(self, words: List[str]) -> List[str]:
+        res = []
+        for i in range(len(words)):
+            for j in range(len(words)):
+                if i == j:
+                    continue
+                if words[i] in words[j]:
+                    res.append(words[i])
+                    break
+        return res
