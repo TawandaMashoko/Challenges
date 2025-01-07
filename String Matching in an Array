@@ -1,0 +1,16 @@
+Problem:Leetcode 1408
+Approach:
+You need to break the loop when the match is found because if you say continue it will be an infinite loop, or it will run through the loop 2 times.
+Time complexity is n^2 because we have a nested loop.
+Solution:
+class Solution:
+    def stringMatching(self, words: List[str]) -> List[str]:
+        res = []
+        for i in range(len(words)):
+            for j in range(len(words)):
+                if i == j:
+                    continue
+                if words[i] in words[j]:
+                    res.append(words[i])
+                    break
+        return res
