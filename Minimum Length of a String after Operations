@@ -1,0 +1,22 @@
+Problem:3223
+Approach:
+1. Minimizing the Length of the String is the Goal for this Problem, to remove as much as i can.
+2. Paying attention to the count of each character, the positions do not matter in the problem.
+3. 1 and 2 character duplicates will remain the same, but starting from 3 we cutt it down to 1 and if it is 4 we cutt it down to 2, if it is even number it goes down
+to 2 and if odd, it goes down to 1, and in this case we can solve the problem in linear time
+in the example :
+a -> 3 (1)
+b -> 4 (2)
+c -> 2 (2)
+if we see an even number we increment a plus 2, and if we see an odd number we add a 1.
+Implementation:
+class Solution:
+    def minimumLength(self, s: str) -> int:
+        res = 0
+        for i in Counter(s).values():
+            if i % 2 == 1:
+                res += 1
+            else:
+                res += 2
+        return res
+        
