@@ -1,0 +1,48 @@
+Problem:
+
+Approach:
+DS -> Array or Hashmap Data Structure
+1. the arr will exactly have m * n elements, equal to the mat, 
+the number of elements will be equal.
+2. We are going to go through left to right, element by element in the array.
+ii) we want to be able to find the exact same element in the matrix
+and then we want to color/marking it.
+iii) we will map, figuring out which position that element is actaully At
+because it is not going to be the same as in the array.
+iv) we stop when an entire row or an entire column is fully painted
+3) Look Up the Array -> Matrix
+Use a Hashmap DS to map n (r, c)
+4. Verify the Matrix(if col or row has been colored)
+i)Row Count and Column Count
+Map a particular row to the number of filled cells in that specific row.
+Do the samething for the column as well.
+# the element in index i will give us the row and col coordinates
+# the values [r][c] mapped to (r,c)
+n -> (r,c) mat[r][c] is the key
+# if all conditions are true return index i, if the col count has reached the value we wanted it to reach
+
+
+Time Complexity 
+0(m*n)
+Solution:
+class Solution:
+    def firstCompleteIndex(self, arr: List[int], mat: List[List[int]]) -> int:
+        ROWS, COLS = len(mat), len(mat[0])
+        
+        mat_to_position = {} 
+        
+        for r in range(ROWS):
+            for c in range(COLS):
+                mat_to_position[mat[r][c]] = (r,c) 
+        
+        row_cnt = [0] * ROWS 
+        col_cnt = [0] * COLS
+        
+        for i in range(len(arr)):
+            r, c = mat_to_position[arr[i]] 
+            row_cnt[r] += 1
+            col_cnt[c] += 1
+
+            if col_cnt[c] == ROWS or row_cnt[r] == COLS:
+                return i
+        
