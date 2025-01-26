@@ -1,0 +1,98 @@
+Problem: Maximum Employees to Be Invited to a Meeting
+Approach:
+We have a favourites array [2,2,1,2], for this example the array is of length n, n = 4. 
+For each index, the 0th index employee wants to sit to person 2 and person 2 is at Index 2[1].
+Person 2[index 2] wants to sit to person [1] the value sitting at that index.
+Person 1 is at index 1 with the value of 2 and also person.
+We have one single table, which is a circle of infinite size.
+We want to place the employees on this circle.
+
+What the Problem Wants:
+Figure out the maximum number of employees that we can place at the table, while following this array, making sure each person sitting on the table is sitting to their favourite person. 
+What we want to return is the number of people that we can see on the table.
+
+Algorithm:
+
+What they gave us is a "Directed Graph".
+for example for first index 0 were there is a value 2,
+What it is saying is that there is an edge from person 0(index) to person 2 the value of index 0.
+
+Graph 0 -> 2, then 1 -> 2 and 2 is also coming to 1, 2 -> 1, so 1 <-> 2, then last 3 -> 2.
+
+1. We have n nodes, and n edges, meaning there might be a cycle in the graph because there are no duplicate edges. 
+Edge cases: No self loops, one does not loop into one again and no duplicate edges.
+
+2. We can have 3 nodes pointing to one node, and we know that each node is connected to exactly one node, the node with 3 connected to it will either connect to the 1st, 2nd or 3rd atleast one of them, meaning we are atleast going to have one cycle.
+
+3. We can end up with bigger cycles, but every graph will have atleast one cycle innit, at minimum the cycle will be of length 2.
+
+4. We can have a bunch of disjoint sets, a bunch of connected components that are not connected to each other, for example additional nodes 4 and 5 only connected to each other without connecting to any index 0,1,2,3.
+
+5. We have to find the longest path that contains a cycle
+
+Key Observation
+
+1. Every connected component has exactly one cycle.
+2. Components with a cycle of length = 2, form non-closed to other non closed circles.
+3. Components with a cycle of length > 2, form closed circles so They can't connect.
+
+Actions
+
+1. Find the Longest Cycle aka the longest closed circle,because the longest cycle is going to be a closed circle.
+2. Find all components with length = 2 cycles.
+i)For each longest path in that component, sum all the parts.
+3. Return max step 1 and step 2.
+
+The BFS algorithm, the variable chain_sum is going to chain all of the longest non closed circles together.
+
+Solution:
+
+class Solution:
+    def maximumInvitations(self, favorite: List[int]) -> int:
+
+        N = len(favorite)
+        longest_cycle = 0
+        visit = [False] * N
+        length_2_cycles = []
+        for i in range(N):
+            if visit[i]:
+                continue
+            start, curr = i, i
+            cur_set = set()
+            while not visit[curr]:
+                visit[curr] = True # Marked as visited.
+                cur_set.add(curr) # add it to the hash set.
+                curr = favorite[curr]
+            if curr in cur_set:
+                length = len(cur_set)
+                while start != curr:
+                    length -= 1
+                    start = favorite[start]
+                longest_cycle = max(longest_cycle, length)
+                if length == 2:
+                    length_2_cycles.append([curr, favorite[curr]])# appending a pair of nodes cur and the neighbor of cur. 
+
+        inverted = defaultdict(list) # default dict to invert the graph
+        # the dst was the source and the source is now the destination because we have inverted the graph
+        for dst, src in enumerate(favorite):
+            inverted[src].append(dst)
+        
+        def bfs(src, parent):
+            q = deque([(src,0)]) # node, length
+            max_length = 0
+
+            while q:
+                node, length = q.popleft()
+                if node == parent:
+                    continue
+                max_length = max(max_length,  length)
+                for nei in inverted[node]:
+                    q.append((nei, length + 1))
+            return max_length
+
+        
+        
+        chain_sum = 0
+        for n1, n2 in length_2_cycles:
+            chain_sum += bfs(n1, n2) + bfs(n2, n1) + 2
+        return max(chain_sum, longest_cycle)
