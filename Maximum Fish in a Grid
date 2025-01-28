@@ -1,0 +1,41 @@
+Problem:
+
+Explanation:
+We are given a 2D grid and each value "Innit", is going to be 0, meaning which represents a land(Spacious) position, or it could have a positive number meaning that it represents some water cell, that is guaranteed to contain a positive number of fish.
+
+1. the number represents the number of fish at that position. 
+2. You can choose any of the cells that have fish, you can collect all of the fish connected to that node i pick in all 4 directions, 
+Tetris.
+
+Approach: Graph Traversal on a 2D matrix, DFS.
+
+1. We are going to start from the top left, and scan to the right.
+ - Hashset is the variable visit, 
+2. Write function dfs that will take 2 coordinates [r,c]. 
+3. The function is a nested function, and it will only be taking in positive values. 
+4. the first edge case is to make sure that we do not go out of bounds.
+
+Solution:
+
+class Solution:
+    def findMaxFish(self, grid: List[List[int]]) -> int:
+        def dfs(r, c):
+            if (r < 0 or c < 0 or r == ROWS or c == COLS or 
+                grid[r][c] == 0 or (r, c) in visit
+            ):
+                return 0
+            visit.add((r, c))
+            res = grid[r][c]
+
+            neighbors = [[r+1,c], [r-1,c], [r,c+1], [r,c-1]]
+            for nr, nc in neighbors:
+                res += dfs(nr, nc)
+            return res
+        ROWS, COLS = len(grid), len(grid[0])
+        res = 0
+        visit = set()
+        for r in range(ROWS):
+            for c in range(COLS):
+                res = max(res, dfs(r, c))
+        
+        return res
