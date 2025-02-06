@@ -1,0 +1,36 @@
+Problem: Tuple with Same Product
+Approach:
+Tuple Storage for uniqueness, a!=b!=c!=d, we only consider unordered pairs, avoiding duplicates.
+ - Build a dictionary of products, iterate over all unique pairs (a,b)
+ - store a * b as the key, mapping to a list of valid (a, b)
+ - Count valid tuples, for each product, if the multiple pairs exist, generate all possible valid(c,d) pairs.
+ - Since (a,b,c,d) can be ordered in 2! * 2! = 4 ways, i will always multiply by 4.
+
+Time Complexity
+Hash Map Lookup (0(1))
+0(n^2) where N < 1000
+
+Data Structure:
+1. Hash Map(defaultdict(list))
+ - this dictionary is going to store products of pairs as keys, mapping them to a list of pairs (a,b).
+
+Code:
+
+class Solution:
+    def tupleSameProduct(self, nums: List[int]) -> int:
+        product_map = defaultdict(int)  # Dictionary to store product counts
+        count = 0
+
+        # All possible pairs (a, b) and store their products
+        for i in range(len(nums)):
+            for j in range(i + 1, len(nums)):  # Avoid duplicate pairs
+                product = nums[i] * nums[j]
+                product_map[product] += 1  # Count of each product
+
+        # Step 2: Count valid tuples
+        for pairs in product_map.values():
+            if pairs > 1:
+                count += (pairs * (pairs - 1) // 2) * 8  # choosing 2 pairs
+
+        return count
+
