@@ -1,0 +1,48 @@
+ - Given a string s, and what we want to do is remove every single  digit from the input string.
+ - Everytime we end up removing a digit, we want to remove the CLOSEST  non-digit character to the left of it.
+ - first we remove the first digit
+
+Examples:
+
+s = "cb34",
+1. We iterate through the input string, we see a character we add it to the variable, then when i see the digit, we skip the digit and remove the previous character we added to the string, "cb" the moment we see 3, we remove b.
+2. The reason we add b is we have no idea what is coming up ahead, so we are going through this from left to right.
+3. Next we see a character that happens to be 4, so we skip it and remove c, so then we will end up with an empty string.
+
+Approach
+
+1. Go through the input in reverse order.
+2. Check if the character at index i is a digit, through an inbuilt function called isdigit(). 
+3. Case 1(if) If it is a digit, we will skip that character and increment the delete_cnt.
+4. Case 2 (elif)If it is not a digit, the delete_cnt is positive then we decrement the delete_cnt, because we are deleting a character.
+5. Last Case(else), it was not a digit and our delete_cnt is 0, we append the character and add it to the result.
+
+N.B - we are going through this in reverse order, so the result will be built in reverse Order, so it is a negative of the solution.
+ - When we return, we use the .join but return the string of the res array in reverse like ::-1
+
+How to create the isdigit( function ):
+
+1. we def a function called isdigit(c) and pass in a character c.
+2. get the asci value of that character like this ord(c) making sure it is inbetween the digit 0 and the digit 9
+
+def isdigit(c):
+	return ord("0") <= ord(c) <= ord("9")
+
+and re return the value of this Boolean.
+
+Solution:
+
+class Solution:
+    def clearDigits(self, s: str) -> str:
+        res = []
+        delete_cnt = 0
+
+        for i in reversed(range(len(s))):
+            if s[i].isdigit():
+                delete_cnt += 1
+            elif delete_cnt:
+                delete_cnt -= 1
+            else:
+                res.append(s[i])
+        return "".join(res[::-1])  
+        
