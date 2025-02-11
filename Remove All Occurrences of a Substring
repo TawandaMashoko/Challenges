@@ -1,0 +1,29 @@
+Problem: given a string s and its part as part of the parameters i have to remove every substring stored in part, that is present in string s.
+
+Approach:
+
+Turn the string into a List(Stack)
+Traverse s character by character while maintaining  a growing result in a list.
+When the last few characters in the list match the "part", remove them.
+
+
+Data Structure:
+
+STACK - for efficient removal, i thought of using the split function but it is not efficient because string operations like split and replace in python are 0(n^2) and a stack based approach enables me to handle the problem in 0(n)
+
+
+Solution
+
+class Solution:
+    def removeOccurrences(self, s: str, part: str) -> str:
+
+        stack = []
+        part_len = len(part)
+
+        for char in s:
+            stack.append(char)
+            if len(stack) >= part_len and "".join(stack[-part_len:])==part:
+                del stack[-part_len:]
+        return "".join(stack)
+        
+        
