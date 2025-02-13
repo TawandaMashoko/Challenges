@@ -1,0 +1,51 @@
+Problem:
+Approach:
+1.1st we convert nums into Min Heap, allowing efficient access to smallest 2 elements
+2.We repeat by using a while loop the merge operation until the smallest element is less than k
+3.Make a condition to extract the 2 smallest elements x and y
+4.Compute the new element by creating a variable new_element which will be equal to min(x) which will also be local variables inside the loop * 2 and add the max variable y
+5. Insert the element back in the heap.
+5. Lastly count the number of operations performed
+
+Data Structure:
+
+Min Heap ensures the smallest element is always the root, but the rest of the structure must not be fully sorted
+Heap is built using binary data structure (filling from left to right)
+The first three elements (after placing 1 at the root) must be 2 and 10 since they appear first in nums.
+2 is placed before 10 because we must fill the left child first before moving to the right.
+The next two elements are 11 and 3, so they are placed under 2 following the left-to-right rule.
+        1
+       /  \
+      2    10
+     / \
+    11  3
+
+Min Heap(Priority Queue), a tree based data structure that follows heap property, using the python module heapq, chose this method because it is the fastest way to extract
+2 elements 0(log N).
+Fast Insertion which is also Log N, after merging x and y, the new value is pushed into the heap efficiently
+Below i put the Heap Operations in Code:
+import heapq
+
+heapq.heapify(nums)  # Converts nums into a Min Heap in O(N)
+x = heapq.heappop(nums)  # Removes and returns the smallest element in O(log N)
+y = heapq.heappop(nums)  # Removes the second smallest element in O(log N)
+heapq.heappush(nums, new_element)  # Inserts the new element in O(log N)
+
+
+
+Solution:
+class Solution:
+    def minOperations(self, nums: List[int], k: int) -> int:
+        heapq.heapify(nums) 
+        operations = 0
+
+        while nums[0] < k:
+            x = heapq.heappop(nums)
+            y = heapq.heappop(nums)
+
+            new_element = x * 2 + y 
+            heapq.heappush(nums, new_element)
+
+            operations += 1
+        return operations
+	
