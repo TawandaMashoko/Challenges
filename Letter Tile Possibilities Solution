@@ -1,0 +1,19 @@
+SOlution
+
+from collections import Counter
+
+class Solution:
+    def numTilePossibilities(self, tiles: str) -> int:
+        count = Counter(tiles)  # Count occurrences of each character
+
+        def backtrack():
+            res = 0
+            for c in count:
+                if count[c] > 0:
+                    count[c] -= 1  # Use this tile
+                    res += 1  # Count this sequence
+                    res += backtrack()  # Continue to next sequence
+                    count[c] += 1  # Restore tile count
+            return res
+
+        return backtrack()
