@@ -1,0 +1,40 @@
+Problem - 
+You are given a 0-indexed string pattern of length n consisting of the characters 'I' meaning increasing and 'D' meaning decreasing.
+
+A 0-indexed string num of length n + 1 is created using the following conditions:
+
+num consists of the digits '1' to '9', where each digit is used at most once.
+If pattern[i] == 'I', then num[i] < num[i + 1].
+If pattern[i] == 'D', then num[i] > num[i + 1].
+Return the lexicographically smallest possible string num that meets the conditions.
+
+Idea - the idea is we are given a string that is only going to contain 2 characters, upper case 'I' which means Increasing and uppercase 'D' means decreasing.
+- we are given a string called pattern, and the constraint is the max length of this string is going to be 8.
+- given the pattern string, we want to create a string of numbers that we will return in the end.
+
+Approach:
+
+1. If for example we have 3 'I I I' characters we are going to have 4 numbers in the output, for every one of the characters, the I the 2 adjacent should be strictly in increasing order
+- If pattern[i] == 'I', then num[i] < num[i + 1].
+
+2. 
+
+
+Data Structure
+
+Stack
+
+
+Solution
+
+class Solution:
+    def smallestNumber(self, pattern: str) -> str:
+        res, stack = [], []
+        for i in range(len(pattern) + 1):
+            stack.append(i + 1)
+
+            while stack and (i == len(pattern) or pattern[i] == "I"):
+                res.append(str(stack.pop()))
+        return "".join(res)
+
+
