@@ -1,0 +1,56 @@
+Problem:
+We are Given an array of strings nums containing n unique binary strings each of length n, return a binary string of length n that does not appear in nums. 
+If there are multiple answers, you may return any of them.
+
+Example 1:
+
+Input: nums = ["01","10"]
+Output: "11"
+Explanation: "11" does not appear in nums. "00" would also be correct.
+
+Approach:
+We have to return a binary string that is of the same length
+One quick Optimization is how to check if the string exists in the given set, we have to convert it into a "hashset"
+
+Algorithm
+Backtracking, backtracking is going to have a height of n, so if n is 2  then the height of the backtracking is going to be 2, if n = 3, same will be the backtracking
+Through this algorithm, we are going to generate a bunch of binary strings until we get the right one.
+
+1. _ _, these 2 dots since the 1st example is 2 spots, we will take one decision to be 0 and the other to be 1, 
+                        0        1
+                       / \      / \   ----> 1-> 1 is the one that has been return in this example but 0 -> 0 appeared first so i would return that.
+                      0   1,   0   1
+we can do the same for one, but it will be easier to look from the left most side because we have already reached the length of 2, and as we can se from above, 00
+The approach her is we should be generating 2^n strings but we do not really have to do that because as soon as we find one that works(Not contained in Nums) we just return it
+and stop the backtracking, so that the time complexity will not be 2^n but n^2
+
+Code in Plain English
+
+1. Convert the input nums into Hashset, strSet through list comprehension.
+2. Do this recursively backtracking, so create a function with 2 parameters, first for the current index we are at in the string we are generating and what that current string happens to be
+3. Inside the function make sure to create a condition to handle the base case, which is to stop as soon as we get n characters, if index i is equal to the length of input nums
+4. Check if the string in current if it is equal to one of the strings in the Hashset.
+5. Create a variable res inside the function where you have the condition, and  return None if the res is in the variable strSet, if not we return the string in res meaning we have found the solution
+6. Do the backtracking, for the index do i + 1 to shift to the next position each time, and leave current as it is and we get whatever the result was returned
+7. Below make a condition if the result is not null then return the res, this is important because we do not want to generate extra strings we do not need
+8. Call the backtracking function and inside the parameters, starting with index 0 will be wise and then for 2nd param use an array[] which will be all 0's for how many characters that will be in nums if you are using python and then change it to a string when returning the output.
+
+Code Implementation
+
+class Solution:
+    def findDifferentBinaryString(self, nums: List[str]) -> str:
+        strSet = {s for s in nums}
+
+        def backtrack(i, cur):
+            if i == len(nums):
+                res = "".join(cur)
+                return None if res in strSet else res
+
+            res = backtrack(i + 1, cur)
+            if res: return res
+            cur[i] = "1"
+            res = backtrack(i + 1, cur)
+            if res: return res
+            
+        return backtrack(0, ["0" for s in nums])
+        
