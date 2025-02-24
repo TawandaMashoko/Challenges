@@ -1,0 +1,102 @@
+The Problem has a very long description but key takeaways are 2 people in this Problem A and B, Alice and Bob.
+
+
+Approach:
+Example 1
+
+  (0) -2
+   |	
+  (1) 4
+  /\
+(2)(3)--(4)
+ 2  4   6
+
+Input: edges = [[0,1],[1,2],[1,3],[3,4]], bob = 3, amount = [-2,4,2,-4,6]
+Output: 6
+Explanation: 
+The above diagram represents the given tree. The game goes as follows:
+- Alice is initially on node 0, Bob on node 3. They open the gates of their respective nodes.
+  Alice's net income is now -2.
+- Both Alice and Bob move to node 1. 
+  Since they reach here simultaneously, they open the gate together and share the reward.
+  Alice's net income becomes -2 + (4 / 2) = 0.
+- Alice moves on to node 3. Since Bob already opened its gate, Alice's income remains unchanged.
+  Bob moves on to node 0, and stops moving.
+- Alice moves on to node 4 and opens the gate there. Her net income becomes 0 + 6 = 6.
+Now, neither Alice nor Bob can make any further moves, and the game ends.
+It is not possible for Alice to get a higher net income.
+
+
+Explanation of this example
+
+-Alice is going to start at 0 in this example, and this graph is an undirected graph but it is also a tree, this means there is no CYCLE.
+- It is just a tree given in the form of a graph, and we have to convert that into an adjacency list because it will be easier for us to traverse through it.
+- The nodes are going to be numbered from 0 to n - 1, Alice will start at 0 and bob will be whatever the parameter happens to be in this case 
+- were there are bullet points in the problem, these are just rules of the game, or the simulation we want to run, and the at the end of that simulation we want to find out, what is the max profit that Alice can have.
+
+1. Each of the values attached to the node is the total profit we can get from a given node. 
+2. Alice has to go down until she reaches a leaf node meaning there is nowhere to go from there, and as alice is going she will be collecting the profit of every node that she visits.
+3. Bob's goal is to reach the root node, that means he will never have any choices he has to go in the path 3 to 1 to 0. 
+ - because the node bob has might have had multiple nodes that could lead to 0 but that will make it a cycle,and trees do not work like that
+4. During the simulation if Bob and alice reaches the same node they will take the profit or loss of that node and share it among themselves.
+- keep track of the time during the simulation.
+5. If Alice visits a node that Bob has already been through, she cannot take anything from that node,
+6. What we have to return is the maximum net income tha talice could possibly have if she travels the optimal leafnode.
+- regardless of the paths that Alice takes, we want to run the simulation such that she maximizes her profit.
+
+Data Structure
+
+It Couldve been Dynamic Programming or Greedy but greedy is the best way for this problem, but we have to make in a few key observations to make the problem easier.
+
+1. Alice - Choices
+2. Bob - No Choices
+- Use dfs to traverse from the node that Bob is currently in to the rootnode
+
+BFS for Alice and DFS for Bob
+
+Code Implementation:
+
+class Solution:
+    def mostProfitablePath(self, edges: List[List[int]], bob: int, amount: List[int]) -> int:
+        adj = defaultdict(list)
+        for v1, v2 in edges:
+            adj[v1].append(v2)
+            adj[v2].append(v1)
+        
+        # Bob - Simulation DFS
+        bob_times = {} #node on root path -> time visited 
+        def dfs(src, prev, time):
+            if src == 0:
+                bob_times[src] = time  
+                return True
+            for nei in adj[src]:
+                if nei == prev:
+                    continue
+                if dfs(nei, src, time + 1):
+                    bob_times[src] = time 
+                    return True
+            return False
+        dfs(bob, -1, 0)
+
+        # Alice Simulation BFS
+        q = deque([(0, 0, -1, amount[0])]) # (node, time, parent(prev node to not cycle), total profit)
+        res = float("-inf")
+
+        while q:
+            node, time, parent, profit = q.popleft()
+            for nei in adj[node]:
+                if nei == parent:
+                    continue
+                nei_profit = amount[nei]
+                nei_time = time + 1
+                if nei in bob_times:
+                    if nei_time > bob_times[nei]:
+                        nei_profit = 0
+                    if nei_time == bob_times[nei]:
+                        nei_profit = nei_profit // 2
+
+                q.append((nei, nei_time, node, profit + nei_profit))
+                if len(adj[nei]) == 1:
+                    res = max(res, profit + nei_profit)
+
+        return res
