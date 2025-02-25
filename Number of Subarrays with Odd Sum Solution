@@ -1,0 +1,59 @@
+Problem:
+Given an array of integers arr, return the number of subarrays with an odd sum.
+
+Since the answer can be very large, return it modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: arr = [1,3,5]
+Output: 4
+Explanation: All subarrays are [[1],[1,3],[1,3,5],[3],[3,5],[5]]
+All sub-arrays sum are [1,4,9,3,8,5].
+Odd sums are [1,9,3,5] so the answer is 4.
+
+Approach:
+
+There is a bruteforce to this, n^2, get every single sub array starting from the first element, which is [1][1,3][1,3,5] and then every single subarray starting from the second position [3][3,5] and then subarray starting at the last element is [5], n subarrays starting from each element is n^2 because there are n elements in the first place.
+
+- maintain the sum of each subarray and then check if it is odd and then return the total sum of how many subarrays which had an Odd Sum
+
+Optimization
+
+- the first thing to ask in this problem is that is there some repeated work, pattern identification of the repeated work.
+- as i was going through the problem i thought prefix sum could be applied to this problem, i will explain how
+1) With the Bruteforce, it works by counting each subarray starting from each given element.
+2) How about we count all the subarrays ending at the element 1 instead of starting from it, basically inverting how we are looking at this problem
+
+- So keep track of current cum at 0, then we move to the element, we   add it and we have 1, we check is the number odd or even.
+- res variable is the total account,and we set that to 1 
+- we add the next element, current sum becomes 1 + 3 = 4, and that will tell me if this [1,3] subarray is even or odd, at this time it is even so we do not increment the result.
+- instead of keeping track of what the prefix sums are, so if our number is even, we just need to know, how many prefix sums had an odd sum.
+- then how many odd prefix sums did we have that did not include number 3 for example, and if we knew how many we had, then instantly calculate how many odd sums are ending at this element, so far we only know we have 1 odd prefix sum
+- create 2 variables to calculate the odd number of prefix sums and even number of prefix sums
+
+
+Data Structure:
+it is linear time 0(n) and 0(1) space because we do not have any data structures.
+- the cur_sum variable is basically prefix variable, odd_cnt, even_cnt and res and the MOD, anytime we update the result we need to mod it by that number
+- go through every number in the array, add it to the cur_sum, and then we will have 2 cases, if the cur_sum is odd increment res variable,
+
+Solution:
+class Solution:
+    def numOfSubarrays(self, arr: List[int]) -> int:
+        cur_sum = 0
+        odd_cnt = 0
+        even_cnt = 0
+        res = 0
+        MOD = 10**9 + 7
+
+        for n in arr:
+            cur_sum += n 
+            if cur_sum % 2 == 1: #odd
+                res = (res + 1 + even_cnt) % MOD
+                odd_cnt += 1
+            else: #even 
+                res = (res + odd_cnt) % MOD
+                even_cnt += 1
+        return res
