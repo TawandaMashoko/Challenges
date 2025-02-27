@@ -1,0 +1,47 @@
+Problem:
+Length of Longest Fibonacci Subsequence - 
+
+A sequence x1, x2, ..., xn is Fibonacci-like if:
+
+n >= 3
+xi + xi+1 == xi+2 for all i + 2 <= n
+Given a strictly increasing array arr of positive integers forming a sequence, return the length of the longest Fibonacci-like subsequence of arr. If one does not exist, return 0.
+
+A subsequence is derived from another sequence arr by deleting any number of elements (including none) from arr, without changing the order of the remaining elements. For example, [3, 5, 8] is a subsequence of [3, 4, 5, 6, 7, 8].
+
+Important: The array is strictly increasing and this implies there are no duplicates
+
+This is a sequence not an array, so we can take some numbers and skip some
+Requirements:
+- the sequence must have atleast 3 numbers n>=3.
+the fib sequence starts with two 1's, add them together and get 2, take 1 and add 2, then get 3, add 2 and 3 to get 5, and 5 and 3 to get 8 and so on but in the example we can start at 4, because there is no 4 in the og Fib Seq but it is a Fib-Like Seq.
+- in this problem we are looking for a subsequence. 
+Approach: 
+
+Data Structure:
+1. HashMap or Hashset
+- start with the 2 pointers, 1 and 2, and sum them up.
+- all we need to check is if the sum of these 2 exists anywhere in the array, 1 is prev, 2 is cur and the next number will be the sum of the 2 prev and cur, exist somewhere
+- the elements are in increasing order so we know it exists, so the best way to check it efficiently is through a hashmap
+
+The Code is not bruteforce because we did not do any backtracking, we just went with a "Greedy" approach
+
+
+Code Implementation:
+
+class Solution:
+    def lenLongestFibSubseq(self, arr: List[int]) -> int:
+        arr_set = set(arr)
+        res = 0
+
+        for i in range(len(arr) - 1):
+            for j in range(i + 1, len(arr)):
+                prev, cur = arr[i], arr[j]
+                nxt = prev + cur
+                length = 2
+                while nxt in arr_set:
+                    length += 1
+                    prev, cur = cur, nxt
+                    nxt = prev + cur
+                    res = max(res, length)
+        return res
