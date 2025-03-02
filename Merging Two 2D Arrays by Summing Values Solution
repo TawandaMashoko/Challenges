@@ -1,0 +1,56 @@
+Problem: Merge Two 2 D Arrays by Summing Values
+
+Example 1:
+
+Input: nums1 = [[1,2],[2,3],[4,5]], nums2 = [[1,4],[3,2],[4,1]]
+Output: [[1,6],[2,3],[3,2],[4,6]]
+Explanation: The resulting array contains the following:
+- id = 1, the value of this id is 2 + 4 = 6.
+- id = 2, the value of this id is 3.
+- id = 3, the value of this id is 2.
+- id = 4, the value of this id is 5 + 1 = 6.
+
+Approach:
+- each array has a bunch of pairs in it, [id,value]
+- each array is sorted based on the id of each pair.
+- nums 1, the are pairs with the id of 1 and 4, and same applies to nums 2.
+- for each given array they are not going to be any duplicate id's, but there can be overlapping id's between the 2 like we mentioned above.
+- we want to merge them in sorted order, for the first pair of num 1 and num 2 notice how they have the same ID, so we want to merge the 2 together, leaving the result with the same Id, 1 in this case but the values will be summed together, just like in the example we take 4 and 2 and then it will become 6 and the Id will still remain as 1.
+- use 2 pointer since both the arrays are sorted
+
+IMP: Where we have different id, we pick the pointer with the smaller Id, in this case [2,3] is smaller than [3,2], we take the entire pair and add it to the output, move the pointer to [4,5] in nums 1 and the pointer still remains in [3,2] in nums 2, compare the 2 Id's, [3,2] has a smaller Id 3, so we take this pair and add it to the output and shift the pointer.
+
+- Now move the pointer to the last [4,1], since the pointer in nums 1 is already at [4,5], we merge them, take 1 + 5 and it becomes 6, then when the pointers get out of bounds, we know we are done at this point.
+
+ 
+
+Algorithm
+
+Merge Sort, taking 2 sorted arrays and merging together.
+
+Code: 
+
+class Solution:
+    def mergeArrays(
+        self, nums1: List[List[int]], nums2: List[List[int]]
+    ) -> List[List[int]]:
+        i, j = 0, 0
+        res = []
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i][0] < nums2[j][0]:
+                res.append(nums1[i])
+                i += 1
+            elif nums1[i][0] > nums2[j][0]:
+                res.append(nums2[j])
+                j += 1
+            else:
+                res.append([nums1[i][0], nums1[i][1] + nums2[j][1]])
+                i, j = i + 1, j + 1
+        while i < len(nums1):
+            res.append(nums1[i])
+            i += 1
+        while j < len(nums2):
+            res.append(nums2[j])
+            j += 1
+        return res
+
