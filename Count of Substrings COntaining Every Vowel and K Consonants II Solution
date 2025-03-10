@@ -1,0 +1,75 @@
+Count of Substrings COntaining Every Vowel and K Consonants II.
+
+Problem:
+
+Given a string variable called Word and a non negative integer k, i have to return the total number of substrings of word that contain every vowel ('a','e','i','o','u') at least once and exactly k consonants.
+
+Understanding the Problem:
+We are looking for substrings, continous segments of the string that satisfy 2 conditions:
+1) All vowels should be present containing atleast one(a,e,i,o,u)
+2) The substring must have exactly k characters that are not vowels (i.e. consonants).
+The string only contains lowercase characters, and efficiency will matter for this problem because the string can be long to 2 * 10^5.
+
+Example 1: "aeioqq", k = 1
+No substring has all five vowels (missing 'u'), so output is 0.
+
+Example 2: "aeiou", k = 0
+"aeiou" has all vowels and 0 consonants (length 5, all vowels), so output is 1.
+
+Example 3: "ieaouqqieaouqq", k = 1
+Substrings like "ieaouq" (5 vowels + 1 consonant 'q') work. Output is 3.
+
+Approach:
+
+Substrings are continuous segments, a natural way of approaching this problem is to start by at an index and an end index.
+A brute-force approach would be to generate all substrings (O(n²) substrings for a string of length n) and check each one (O(n) per substring to count characters), but that’s O(n³)—too slow given the constraints. We need something smarter.
+
+ - slide a window across the string.
+ - for each position of the right pointer(end), adjust the left pointer (start) to satisfy the conditions we are given.
+ - count all valid substrings where, 1. All vowels have a count >= 1, and Consonant count = k.
+"aeiou", k = 0
+Window from 0 to 4: 'a', 'e', 'i', 'o', 'u' (5 vowels, 0 consonants). Valid!
+Any smaller window (e.g., "aeio") misses a vowel; any larger isn’t possible.
+
+For Example 3 ("ieaouqqieaouqq", k = 1):
+
+"ieaouq" (0 to 5): All vowels + 1 consonant ('q'). Valid.
+We need to find all such windows.
+
+Data Structure:
+
+Sliding Window with a Hash Map (or Array) for vowel counts and an integer for consonant count.
+
+- Sliding Window with two pointers (start and end).
+- Hash Map to store counts of 'a', 'e', 'i', 'o', 'u'.
+- Integer to track the number of consonants in the window.
+
+This isn’t just a traversal problem—we’re not checking each character once and done. We need to manage a dynamic window and count substrings that meet specific criteria, making the sliding window with auxiliary counting structures ideal.
+
+Code:
+
+class Solution:
+    def countOfSubstrings(self, word: str, k: int) -> int:
+        def atleastk(k):
+            vowel = defaultdict(int)
+            non_vowel = 0
+            res = 0
+            l = 0
+
+            for r in range(len(word)):
+                if word[r] in "aeiou":
+                    vowel[word[r]] += 1
+                else:
+                    non_vowel += 1
+                while len(vowel) == 5 and non_vowel >= k:
+                    res += (len(word) - r)
+                    if word[l] in "aeiou":
+                        vowel[word[l]] -= 1
+                    else:
+                        non_vowel -= 1
+                    if vowel[word[l]] == 0:
+                        vowel.pop(word[l])
+                    l += 1
+            return res
+
+        return atleastk(k) - atleastk(k + 1)
