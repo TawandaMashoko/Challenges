@@ -1,0 +1,74 @@
+Minimum Cost Walk Weighted Graph
+
+Understanding the problem, We have a graph with n nodes, and it has n queries.
+
+Data Structure - the Union Find Data Structure is one we are going to use and we are going to be looking for the edges only, and the complexity is going to be 0(no of edges + queries)
+
+Union Find Briefly explained, imagine you have some One Container that contains different colored objects and you want to group them according to some criteria, (0,1,2,3,4,5), the grouping can be [(0,1,3,4), (5,2)], after the grouping them one will want to know certain properties of the group like how many groups they are and if 2 objects belong to the same group
+
+1. Union-> 2 groups[0 | 1]                  [0 1]
+                   [2 | 3], union (0,1) ->  [2 3], it joins (x,y) into one group.
+-  0 and 2 belong to the same group and 1 and 3 belong to the same  group, and when we call this function union, it joins the groups containing 0 and 1, and the results will be all 4 objects belong to the same group
+2. Find -> the second operation and it takes a single object x as the input and returns the group that x belongs to, and this Algorithm is useful to graph type of problems, because we connect all the objects in the same group with an edge.
+
+We designate a representative element for each group, and this element will represent the entire group, in the sense that the find function will always return the representative, eg in this example (0,1,2,3,4,5), [(0,1,3,4), (5,2)] the representative for the first group is 0 so if we call find(4) = 0, so when joining these, we set the parent nodes to be 0 and 5 respectively and then when we want to join the nodes, one of the nodes will be the parent of the joined node, for example 5 will be a child of 0 in this case. 
+
+Approach -> Among all the actions we are going to make, we want to find out the one with the minimum cost, and we are not going to calculate the cost by taking the sum of the weights, we will not want to revisit the same node, because there will not be any negative weights.
+
+Cost -> we calculate the cost by taking the Bitwise AND of the edges, so in the example in Leetcode if e take the path from 0 to 3 we take the Bitwise AND of 7 and 7, generally when you take a number and Bitwise AND it with another number it does not change, 7 and 7 will return 7, so i need to take every edge and bitwise AND it,
+
+
+
+Code Implementation
+
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.size = [1] * n
+
+    def find(self, x):
+        # i am going to try to find the root recursively
+        if x != self.parent[x]:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        x = self.find(x)
+        y = self.find(y)
+        if x != y:
+            if self.size[x] < self.size[y]:
+                self.parent[x] = y
+                self.size[y] += self.size[x]
+            else:
+                self.parent[y] = x
+                self.size[x] += self.size[y]
+
+
+class Solution:
+    def minimumCost(
+        self, n: int, edges: List[List[int]], query: List[List[int]]
+    ) -> List[int]:
+        uf = UnionFind(n)
+        for u, v, w in edges:
+            uf.union(u, v)
+
+        # Hashmap for tracking the Cost of each component
+        component_cost = {}
+        for u, v, w in edges:
+            root = uf.find(u)
+            if root not in component_cost:
+                component_cost[root] = w
+            else:
+                component_cost[root] &= w
+
+        # Queries
+        res = []
+        for src, dst in query:
+            r1, r2 = uf.find(src), uf.find(
+                dst
+            )  # bcx it is not guaranteed that these 2 nodes are part of the same component
+            if r1 != r2:
+                res.append(-1)
+            else:
+                res.append(component_cost[r1])
+        return res
